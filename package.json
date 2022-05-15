@@ -1,0 +1,47 @@
+{
+  "name": "apotek-api",
+  "version": "1.0.0",
+  "description": "Sistem Informasi Rumah Sakit,Apotek,Poli,Registrasi",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoniusDoni/backend.git"
+  },
+  "keywords": [
+    "Sistem",
+    "Infomasi",
+    "Rumah",
+    "Sakt",
+    "Apotek",
+    "Poli",
+    "Registarsi",
+    "Rumah",
+    "Sakit"
+  ],
+  "author": "Antonius Doni O",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AntoniusDoni/backend.git/issues"
+  },
+  "homepage": "https://github.com/AntoniusDoni/backend.git#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.17.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.4.1"
+  }
+}
