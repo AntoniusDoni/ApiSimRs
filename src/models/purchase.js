@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Purchase.belongsTo(models.categories,{
+        foreignKey: 'categoryId',
+      });
       Purchase.belongsTo(models.supplier,{
         foreignKey: 'supplierId',
       });
@@ -30,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     supplierId: DataTypes.INTEGER,
     purchase_date: DataTypes.DATE,
+    categoryId:DataTypes.INTEGER,
     grand_total: DataTypes.DOUBLE,
     is_done:DataTypes.TINYINT,
     createdAt: new Date(),

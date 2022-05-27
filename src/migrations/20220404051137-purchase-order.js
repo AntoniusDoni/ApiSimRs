@@ -19,6 +19,9 @@ module.exports = {
       order_date: {
         type: Sequelize.DATE
       },
+      categoryId:{
+        type: Sequelize.INTEGER
+      },
       grand_total: {
         type: Sequelize.DOUBLE
       },

@@ -74,6 +74,11 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isSuperAdmin],
     Order.addOrder
   );
+  app.post(
+    "/api/order/getListOrderbyDate",
+    [authJwt.verifyToken, authJwt.isSuperAdmin],
+    Order.getLisDetailOrderbyDate
+  )
   // Supllier
   app.get(
     "/api/suppliers/listsupplier",

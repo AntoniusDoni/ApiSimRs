@@ -1,5 +1,5 @@
+const { sequelize } = require('../models')
 const db = require("../models");
-const { sequelize } = require('../models') 
 const Items=db.items;
 const Units = db.units;
 const Category = db.categories;
@@ -28,14 +28,15 @@ const moment = require('moment');
             var orderDetails=req.body.details[i];
             // console.log(req.body.details[i].itemId);          
             var qty=orderDetails.quantity;
-            Stock.findAll({
+            // console.log("qty:"+qty);
+            await Stock.findAll({
                 where:{
                     itemId:orderDetails.itemId,     
                 },
                 attributes:['itemId','stock_in','stock_out','no_bact','no_facture','expirate_date','date_in'],
                 order:[['expirate_date','ASC'],['date_in','ASC']]
-            },{ transaction }).then(stocks=>{
-                let mapStock=[];               
+            },{transaction}).then(stocks=>{
+                // let mapStock=[];               
                 stocks.map((stock)=>{
                     var out=0;
                     // console.log(stock.expirate_date)
@@ -46,10 +47,10 @@ const moment = require('moment');
                         out=qty
                         // qty=qty-out
                     }
-                    
-                    if (qty!=0) {                       
-                        var stockOut=parseFloat(stock.stock_out)+parseFloat(out)
-                        // console.log(stockOut)
+                   
+                    if (qty!=0&&stock.itemId==orderDetails.itemId) {                 
+                        // console.log("detail: "+stock.itemId+" qty :"+orderDetails.quantity)      
+                        var stockOut=parseFloat(stock.stock_out)+parseFloat(out) 
                         OrderDetails.create({
                             orderId: req.body.no_order,
                             itemsId: orderDetails.itemId,
@@ -60,15 +61,19 @@ const moment = require('moment');
                         })
 
                         Stock.update({
-                            stock_out: stockOut
+                            stock_out: stockOut,
+                            date_out:req.body.order_date,
+                            status_stock:1
                         }, {
                             where: {
                                 no_bact: stock.no_bact,
                                 no_facture: stock.no_facture,
-                                itemId: stock.itemId
+                                itemId: stock.itemId,                               
                             }
                         })
                         qty=qty-out
+                    }else{
+                        qty=orderDetails.quantity;
                     }
                 })
               
@@ -113,18 +118,7 @@ const moment = require('moment');
          res.status(500).send({ message: error.message });
     }
 })
-function updateStock(itemsId) {
 
-    Stock.findAll({
-        where:{
-            itemId:itemsId,
-           
-        }
-    }).then(stock=>{
-        
-    });
-
-}
 exports.listOrderbynoOrder=(req,res)=>{
     Order.findOne({
         where:{no_order:req.body.no_order},
@@ -209,3 +203,21 @@ exports.getLastOrder = (req, res) => {
         res.status(500).send({ message: err.message });
     });
   }
+
+  exports.getLisDetailOrderbyDate = (req,res) =>{
+    const { date_start } = req.body.date_start;
+    const { date_end } = req.body.date_end;
+    const result=db.sequelize.query("Select items.*,sum(OrderDetails.quantity) as quantity from Orders "+
+    "inner join OrderDetails on OrderDetails.orderId=Orders.no_order "+
+    "inner join items on items.id_items=OrderDetails.itemsId "+
+    "inner join stockies on stockies.itemId=OrderDetails.itemsId and stockies.no_bact=OrderDetails.no_bacth and stockies.no_facture=OrderDetails.no_fa "+
+    "where date_format(order_date,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' group by OrderDetails.itemsId;",{type: db.sequelize.QueryTypes.SELECT }).then(
+        results =>{
+            res.status(200).send({
+                results
+            })
+        })
+      .catch(err => {
+        res.status(500).send({ message: err.message });
+    });   
+}

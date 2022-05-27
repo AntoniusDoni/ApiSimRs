@@ -16,6 +16,7 @@ exports.addPurchase = (async (req, res) => {
             no_po: req.body.no_po,
             supplierId: req.body.supplierId,
             purchase_date: req.body.purchase_date,
+            categoryId:req.body.categoryId,
             grand_total: req.body.grand_total,
         }, { transaction });
 

@@ -2,6 +2,7 @@ const db = require("../models");
 const dotenv = require('dotenv');
 const User = db.users;
 const Role = db.role;
+const Settings=db.setting;
 const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -36,7 +37,19 @@ exports.signup = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+exports.getSetting=(req,res)=>{
+  Settings.findAll({attributes:['id','settingName','attr']}).
+  then(setting=>{
+          res.status(200).send({
+            settings:setting,   
+          });
+        }).catch(err => {
+          res.status(500).send({ message: err.message });
+        });
+}
+
 exports.signin = (req, res) => {
+  
   User.findOne({
     where: {
       username: req.body.username
@@ -63,14 +76,38 @@ exports.signin = (req, res) => {
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push("ROLE_" + roles[i].name.toUpperCase());
+       
         }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token
-        });
+        Settings.findAll({attributes:['id','settingName','attr']}).
+        then(setting=>{
+          res.status(200).send({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            roles: authorities,
+            accessToken: token,
+            setting:setting,   
+          });
+              })
+
+        
+        // var menus=[];
+        // user.getMenus({attributes:['id','menuName','link','parent']}).then(menu=>{
+        //   for (let i = 0; i < menu.length; i++) {
+        //   menus.push({id:menu[i].id,menuName:menu[i].menuName,link:menu[i].link,parent:menu[i].parent});
+        //   }
+          // res.status(200).send({
+          //   id: user.id,
+          //   username: user.username,
+          //   email: user.email,
+          //   roles: authorities,
+          //   accessToken: token,
+          //   // setting:setting,
+          //   menu:menus
+          // });
+        // })
+
+        
       });
     })
     .catch(err => {
