@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       Items.belongsTo(models.units,{
         foreignKey: 'unitId',
       });
+      Items.belongsTo(models.units,{
+        foreignKey: 'content_unit',
+      });
       Items.belongsTo(models.categories,{
         foreignKey: 'categoryId',
       });
@@ -34,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     items_name:DataTypes.STRING,
     items_price:DataTypes.DOUBLE,
     items_content:DataTypes.DOUBLE,
+    content_unit:DataTypes.INTEGER,
     unitId:DataTypes.INTEGER,
     categoryId:DataTypes.INTEGER,
     createdAt: new Date(),

@@ -1,6 +1,6 @@
 const db = require("../models");
 const  { sequelize } = require('../models');
-const Op = sequelize.Op;
+const { Op } = require("sequelize");
 const Items = db.items;
 const Units = db.units;
 const Category=db.categories;
@@ -12,6 +12,7 @@ exports.addItem = (req, res) => {
         items_name: req.body.items_name,
         items_price: req.body.items_price,
         unitId: req.body.unitId,
+        content_unit:req.body.content_unit,
         items_content: req.body.items_content,
         categoryId:req.body.categoryId
     }).then(
@@ -85,9 +86,14 @@ exports.listItems = (req, res) => {
 exports.getItem = (req, res) => {
     Items.findOne({ 
         require: true,
-        where: {              
-            item_code: req.body.keyword,
-            
+        where: {      
+            [Op.or]: [
+                { item_code: req.body.keyword},
+                { items_name: {
+                    [Op.like]:req.body.keyword+"%" 
+                    }
+                }
+              ]        
         }, include: [
             {
                 model: Units,
@@ -100,7 +106,9 @@ exports.getItem = (req, res) => {
             // where :{itemId:sequelize.col('id_items')},          
             attributes:[
                 [sequelize.fn('SUM', sequelize.col('stock_in')), 'stock'],
-                [sequelize.fn('SUM', sequelize.col('stock_out')), 'stockout']
+                [sequelize.fn('SUM', sequelize.col('stock_out')), 'stockout'],
+                [sequelize.fn('MAX', sequelize.col('items_sell')), 'items_sell']
+                
             ],
             raw: true,
         },
@@ -140,7 +148,8 @@ exports.edititems = (req, res) => {
         item_code: req.body.item_code,
         items_price: req.body.items_price,
         unitId: req.body.unitId,
-        items_content: req.body.items_content
+        items_content: req.body.items_content,
+        content_unit:req.body.content_unit
     },
         {
             where: { id_items: req.body.id }

@@ -4,6 +4,7 @@ exports.addsupplier=(req,res)=>{
     supplier.create({
         supplier_name:req.body.supplier_name,
         address:req.body.address,
+        contact_person:req.body.contact_person,
         email:req.body.email,
         phone:req.body.phone
     }).then(supplier=>{
@@ -22,6 +23,7 @@ exports.editsupplier=(req,res)=>{
     supplier.update({
         supplier_name:req.body.supplier_name,
         address:req.body.address,
+        contact_person:req.body.contact_person,
         email:req.body.email,
         phone:req.body.phone
     },

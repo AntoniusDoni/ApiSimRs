@@ -207,11 +207,11 @@ exports.getLastOrder = (req, res) => {
   exports.getLisDetailOrderbyDate = (req,res) =>{
     const { date_start } = req.body.date_start;
     const { date_end } = req.body.date_end;
-    const result=db.sequelize.query("Select items.*,sum(OrderDetails.quantity) as quantity from Orders "+
+    const result=db.sequelize.query("Select items.*,OrderDetails.itemPrice,sum(OrderDetails.quantity) as quantity from Orders "+
     "inner join OrderDetails on OrderDetails.orderId=Orders.no_order "+
     "inner join items on items.id_items=OrderDetails.itemsId "+
     "inner join stockies on stockies.itemId=OrderDetails.itemsId and stockies.no_bact=OrderDetails.no_bacth and stockies.no_facture=OrderDetails.no_fa "+
-    "where date_format(order_date,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' group by OrderDetails.itemsId;",{type: db.sequelize.QueryTypes.SELECT }).then(
+    "where date_format(order_date,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' group by OrderDetails.itemsId,OrderDetails.itemPrice;",{type: db.sequelize.QueryTypes.SELECT }).then(
         results =>{
             res.status(200).send({
                 results

@@ -49,7 +49,6 @@ exports.getSetting=(req,res)=>{
 }
 
 exports.signin = (req, res) => {
-  
   User.findOne({
     where: {
       username: req.body.username
@@ -88,29 +87,74 @@ exports.signin = (req, res) => {
             accessToken: token,
             setting:setting,   
           });
-              })
-
-        
-        // var menus=[];
-        // user.getMenus({attributes:['id','menuName','link','parent']}).then(menu=>{
-        //   for (let i = 0; i < menu.length; i++) {
-        //   menus.push({id:menu[i].id,menuName:menu[i].menuName,link:menu[i].link,parent:menu[i].parent});
-        //   }
-          // res.status(200).send({
-          //   id: user.id,
-          //   username: user.username,
-          //   email: user.email,
-          //   roles: authorities,
-          //   accessToken: token,
-          //   // setting:setting,
-          //   menu:menus
-          // });
-        // })
-
-        
+              })        
       });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };
+exports.updateSetting = (req, res) => {
+  // console.log(req.body.title);
+  Settings.update({
+    attr:req.body.title
+  },{
+    where :{
+      id:1
+    }
+  }
+  )
+  Settings.update({
+    attr:req.body.margin
+  },{
+    where :{
+      id:2
+    }
+  }
+  )
+  Settings.update({
+    attr:req.body.address
+  },{
+    where :{
+      id:3
+    }
+  }
+  )
+  User.findOne({
+    where: {
+      username: req.body.username
+    }
+  })
+    .then(user => {
+      if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+      }
+     
+      
+      var token = jwt.sign({ id: user.id }, process.env.SECRET_JWT, {
+        expiresIn: 86400 // 24 hours
+      });
+      var authorities = [];
+      user.getRoles().then(roles => {
+        for (let i = 0; i < roles.length; i++) {
+          authorities.push("ROLE_" + roles[i].name.toUpperCase());
+       
+        }
+        Settings.findAll({attributes:['id','settingName','attr']}).
+        then(setting=>{
+          res.status(200).send({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            roles: authorities,
+            accessToken: token,
+            setting:setting,   
+          });
+              })        
+      });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+  // res.status(200).send("Seting Telah di perbaharui.");
+}

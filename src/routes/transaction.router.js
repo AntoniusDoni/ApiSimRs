@@ -7,6 +7,7 @@ const categoryContrller = require("../controllers/category.controller");
 const SupplierController = require('../controllers/supplier.controller');
 const Warehouse = require('../controllers/warehouse');
 const Stock=require('../controllers/stock.controller')
+const Setting = require("../controllers/auth.controller");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -16,6 +17,11 @@ module.exports = function (app) {
     );
     next();
   });
+  app.post(
+    "/api/setting/updateSetting",
+    [authJwt.verifyToken, authJwt.isSuperAdmin],
+    Setting.updateSetting
+  );
   //Stock
   app.post("/api/stock/addstock",
   [authJwt.verifyToken,authJwt.isSuperAdmin],
@@ -31,6 +37,23 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isSuperAdmin],
     Stock.getListStockItem
   );
+  app.post("/api/stock/getListStockByDate",
+  [authJwt.verifyToken,authJwt.isSuperAdmin],
+  Stock.getListStockByDate
+  )
+  app.post("/api/stock/getListStockByNoFa",
+  [authJwt.verifyToken,authJwt.isSuperAdmin],
+  Stock.getListStockByNoFa
+  )
+  app.post("/api/stock/getListStockByNoPo",
+  [authJwt.verifyToken,authJwt.isSuperAdmin],
+  Stock.getListStockByNoPo
+  )
+  
+  app.get("/api/stock/getListLastStock",
+  [authJwt.verifyToken,authJwt.isSuperAdmin],
+  Stock.getListLastStock
+  )
   // PO
   app.get(
     "/api/purchase/listpurchase",
@@ -40,6 +63,10 @@ module.exports = function (app) {
   app.post("/api/purchase/listDetailPurchase",
   [authJwt.verifyToken,authJwt.isSuperAdmin],
   Purchase.listDetailPurchase
+  )
+  app.post("/api/purchase/getListPurchaseByDate",
+  [authJwt.verifyToken,authJwt.isSuperAdmin],
+  Purchase.getListPurchaseByDate
   )
   app.get(
     "/api/purchase/getLastNoPo",
@@ -167,6 +194,7 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isSuperAdmin],
     itemContrller.deleteitems
   )
+  
   // warehouse
   app.get(
     "/api/warehouse/listwarehouse",

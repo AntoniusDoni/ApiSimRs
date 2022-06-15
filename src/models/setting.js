@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   setting.init({
     settingName: DataTypes.STRING,
-    attr: DataTypes.DOUBLE
+    attr: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'setting',

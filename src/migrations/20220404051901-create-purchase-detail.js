@@ -29,7 +29,13 @@ module.exports = {
       quantity: {
         type: Sequelize.INTEGER
       },
+      margin: {
+        type: Sequelize.STRING
+      },
       purchase_price: {
+        type: Sequelize.DOUBLE
+      },
+      items_sell: {
         type: Sequelize.DOUBLE
       },
       is_done:{

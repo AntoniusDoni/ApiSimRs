@@ -36,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     no_purchase: DataTypes.UUID,
     itemId: DataTypes.BIGINT,
     purchase_price: DataTypes.DOUBLE,
+    items_sell:DataTypes.DOUBLE,
+    margin:DataTypes.STRING,
     quantity:DataTypes.DOUBLE,
     is_done:DataTypes.TINYINT,
     createdAt: new Date(),

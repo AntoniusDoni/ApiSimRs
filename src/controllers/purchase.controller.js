@@ -7,6 +7,7 @@ const Purchase = db.purchases;
 const PurchaseDetail = db.purchaseDetails;
 const Supplier = db.supplier;
 const Stock = db.stockies;
+const goodReceipts=db.goodReceipts;
 
 exports.addPurchase = (async (req, res) => {
     let transaction;
@@ -27,7 +28,9 @@ exports.addPurchase = (async (req, res) => {
                 no_purchase: po.no_po,
                 itemId: detailsPO.itemId,
                 quantity: detailsPO.quantity,
-                purchase_price: detailsPO.purchase_price
+                purchase_price: detailsPO.purchase_price,
+                margin:detailsPO.margin,
+                items_sell:detailsPO.sell_price
             }, { transaction })
         }
         // console.log('success');
@@ -129,7 +132,21 @@ exports.getLastNoPo = (req, res) => {
         res.status(500).send({ message: err.message });
     });
 }
-
+exports.getListPurchaseByDate = (req,res) =>{
+    const result=db.sequelize.query("select purchases.no_po,supplier_name,date_format(purchase_date,'%d-%m-%Y %H:%i')as purchase_date,grand_total,"+
+    "is_done "+
+    " from purchases "+
+    "inner join suppliers on suppliers.id=purchases.supplierId "+
+    "where date_format(purchases.purchase_date,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' order by purchase_date ASC",{type: db.sequelize.QueryTypes.SELECT }).then(
+        results =>{
+            res.status(200).send({
+                results
+            })
+        })
+      .catch(err => {
+        res.status(500).send({ message: err.message });
+    });
+}
 exports.listPurchase = (req, res) => {
     Purchase.findAll(
         {
@@ -213,8 +230,7 @@ exports.listDetailPurchase = (req, res) => {
 
         ],
         // group:[`item->stocky.no_po`,`item->stocky.itemId`]
-    }).then(purchase => {
-       
+    }).then(purchase => {      
         res.status(200).send({
             purchase: purchase,
         })

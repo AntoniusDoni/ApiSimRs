@@ -41,17 +41,26 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
+      margin: {
+        type: Sequelize.STRING
+      },
       stock_in: {
         type: Sequelize.DOUBLE
       },
       date_in: {
         type: Sequelize.DATE
       },
+      items_price: {
+        type: Sequelize.DOUBLE
+      },
       stock_out: {
         type: Sequelize.DOUBLE
       },
       date_out: {
         type: Sequelize.DATE
+      },
+      items_sell: {
+        type: Sequelize.DOUBLE
       },
       status_stock: {
         type: Sequelize.TINYINT
