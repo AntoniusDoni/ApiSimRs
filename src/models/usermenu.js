@@ -15,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserMenu.init({
     idUser: DataTypes.INTEGER,
-    roleId: DataTypes.INTEGER
+    menuId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'user_menu',
+    modelName: 'user_menus',
   });
   return UserMenu;
 };

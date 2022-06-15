@@ -10,12 +10,19 @@ module.exports = function(app) {
     );
     next();
   });
-  app.get("/api/user/all", controller.allAccess);
+  // Menu
+  app.get("/api/user/menu",[authJwt.verifyToken], controller.getMenus);
+  app.get("/api/user/all",[authJwt.verifyToken],controller.allAccess);
+  app.post("/api/user/getUserbyId",[authJwt.verifyToken],controller.getUserbyId);
+  app.post("/api/user/setEditUser",[authJwt.verifyToken],controller.setEditUser);
+  app.post("/api/user/setUsermenu",[authJwt.verifyToken],controller.setUsermenu);
   app.get(
     "/api/user/users",
     [authJwt.verifyToken],
     controller.userBoard
   );
+  app.delete("/api/user/deleteUser/:id",
+    [authJwt.verifyToken, authJwt.verifyToken],controller.deleteUser);
   app.get(
     "/api/user/admin",
     [authJwt.verifyToken, authJwt.isAdmin],

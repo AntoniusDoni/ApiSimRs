@@ -34,12 +34,6 @@ module.exports = {
       },
       no_po: {
         type: Sequelize.STRING,
-        references: {
-          model: 'purchaseDetails', // name of Target model
-          key: 'no_purchase', // key in Target model that we're referencing
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
       },
       margin: {
         type: Sequelize.STRING

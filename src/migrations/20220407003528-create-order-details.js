@@ -26,6 +26,12 @@ module.exports = {
       no_fa:{
         type: Sequelize.UUID
       },
+      is_racik:{
+        type:Sequelize.TINYINT
+      },
+      idRacik:{
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

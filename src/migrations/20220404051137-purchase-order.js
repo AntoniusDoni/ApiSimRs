@@ -22,6 +22,12 @@ module.exports = {
       categoryId:{
         type: Sequelize.INTEGER
       },
+      nama_apotek:{
+        type: Sequelize.STRING
+      },
+      noSipa:{
+        type:Sequelize.STRING
+      },
       grand_total: {
         type: Sequelize.DOUBLE
       },

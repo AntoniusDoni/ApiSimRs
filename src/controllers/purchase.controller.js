@@ -19,6 +19,8 @@ exports.addPurchase = (async (req, res) => {
             purchase_date: req.body.purchase_date,
             categoryId:req.body.categoryId,
             grand_total: req.body.grand_total,
+            nama_apotek: req.body.nama_apotek,
+            noSipa: req.body.noSipa,
         }, { transaction });
 
         for (var i = 0; i < req.body.details.length; i++) {
@@ -133,15 +135,18 @@ exports.getLastNoPo = (req, res) => {
     });
 }
 exports.getListPurchaseByDate = (req,res) =>{
-    const result=db.sequelize.query("select purchases.no_po,supplier_name,date_format(purchase_date,'%d-%m-%Y %H:%i')as purchase_date,grand_total,"+
-    "is_done "+
+    const result=db.sequelize.query("select purchases.no_po,supplier_name,suppliers.contact_person,date_format(purchase_date,'%d-%m-%Y %H:%i')as purchase_date,grand_total,"+
+    "is_done,nama_apotek,noSipa "+
     " from purchases "+
     "inner join suppliers on suppliers.id=purchases.supplierId "+
     "where date_format(purchases.purchase_date,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' order by purchase_date ASC",{type: db.sequelize.QueryTypes.SELECT }).then(
         results =>{
+            // PurchaseDetail.findAll
+            // console.log(results[0].no_po)
             res.status(200).send({
                 results
             })
+
         })
       .catch(err => {
         res.status(500).send({ message: err.message });

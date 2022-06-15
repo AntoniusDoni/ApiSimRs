@@ -11,9 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      OrderDetails.hasMany(models.items,{
-        foreignKey:'id_items',
-        otherKey:'itemsId'
+      OrderDetails.belongsTo(models.items,{
+        foreignKey:'itemsId',
+      
+      });
+      OrderDetails.belongsTo(models.racikans,{
+        foreignKey:'idRacik',
+      
       });
       OrderDetails.hasMany(models.Order,{
         foreignKey:'no_order'
@@ -30,7 +34,9 @@ module.exports = (sequelize, DataTypes) => {
     quantity: DataTypes.DOUBLE,
     itemPrice: DataTypes.DOUBLE,
     no_bacth:DataTypes.UUID,
-    no_fa:DataTypes.UUID
+    no_fa:DataTypes.UUID,
+    is_racik:DataTypes.TINYINT,
+    idRacik:DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'OrderDetails',

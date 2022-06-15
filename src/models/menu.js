@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
   class menus extends Model {
     /**
@@ -11,6 +13,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      menus.hasMany(models.menus,{
+        as: 'child',
+        foreignKey: 'parent',
+      });
+      // menus.belongsTo(models.user_menu,{
+      //   foreignKey: 'id',
+      // });
     }
   }
   menus.init({

@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true
       },
       order_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       customerName: {
         type: Sequelize.STRING

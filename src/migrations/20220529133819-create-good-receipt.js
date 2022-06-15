@@ -20,9 +20,6 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
-      supplierId: {
-        type: Sequelize.INTEGER
-      },
       grand_total: {
         type: Sequelize.DOUBLE
       },

@@ -1,18 +1,27 @@
 const { sequelize } = require('../models')
 const db = require("../models");
-const purchasedetail = require('../models/purchasedetail');
 const Items = db.items;
 const Units = db.units;
 const Category = db.categories;
-const Warehouse = db.warehouse;
+// const Warehouse = db.warehouse;
 const Stock = db.stockies;
 const Purchase = db.purchases;
 const PurchaseDetail = db.purchaseDetails;
+const GoodReceipt=db.goodreceipts;
+
 exports.addStock = (async (req, res) => {
     let transaction;
     let is_done = false;
     try {
         transaction = await sequelize.transaction();
+         GoodReceipt.create({
+            no_fa: req.body.no_facture,
+            no_po:req.body.no_po,
+            date_in: req.body.date_in,
+            userId: req.body.userId,
+            grand_total: req.body.grand_total
+        }, { transaction });
+
         for (var i = 0; i < req.body.details.length; i++) {
             var details = req.body.details[i];
             // console.log(details);
@@ -82,7 +91,7 @@ exports.addStock = (async (req, res) => {
 })
 exports.getStockbynoPo = (req,res) =>{
     const { no_po } = req.params;
-    const result=db.sequelize.query("select purchaseDetails.no_purchase,purchaseDetails.itemId,purchaseDetails.purchase_price,purchaseDetails.margin,purchaseDetails.items_sell,purchaseDetails.quantity,purchaseDetails.is_done,items.item_code,items.items_name,units.unit_name,categories.category_name,ifnull(Sum(stockies.stock_in),0) as stock from purchaseDetails inner join items on items.id_items=purchaseDetails.itemId inner join units on units.id=items.unitId inner join categories on categories.id=items.categoryId left join stockies on stockies.itemId=purchaseDetails.itemId and stockies.no_po='"+no_po+"'  where purchaseDetails.no_purchase='"+no_po+"' and purchaseDetails.is_done='0' group by purchaseDetails.itemId,stockies.no_po",{type: db.sequelize.QueryTypes.SELECT }).then(
+    const result=db.sequelize.query("select purchaseDetails.no_purchase,purchaseDetails.itemId,purchaseDetails.purchase_price,purchaseDetails.margin,purchaseDetails.items_sell,purchaseDetails.quantity,purchaseDetails.is_done,items.item_code,items.items_name,units.unit_name,categories.category_name,ifnull(Sum(stockies.stock_in),0) as stock from purchaseDetails inner join items on items.id_items=purchaseDetails.itemId inner join units on units.id=items.unitId inner join categories on categories.id=items.categoryId left join stockies on stockies.itemId=purchaseDetails.itemId and stockies.no_po='"+no_po+"'  where purchaseDetails.no_purchase='"+no_po+"'  group by purchaseDetails.itemId,stockies.no_po",{type: db.sequelize.QueryTypes.SELECT }).then(
         results =>{
             res.status(200).send({
                 results
@@ -176,16 +185,15 @@ exports.getListStockByNoPo = (req,res) =>{
 }
 
 exports.getListStockByDate = (req,res) =>{
-    
     const result=db.sequelize.query("select stockies.no_po,stockies.no_facture,item_code,items_name,stockies.items_price,stockies.items_sell,"+
     "date_format(stockies.date_in,'%d-%m-%Y %H:%i') as date_in,date_format(purchase_date,'%d-%m-%Y %H:%i') as purchase_date,"+
     "quantity,stock_in,if(purchases.is_done='1','Selesai','Belum Selesai') as statusPO "+
     "from stockies "+
     "inner join items on items.id_items=stockies.itemId "+
     "inner join purchases on purchases.no_po=stockies.no_po "+
-    "inner join purchaseDetails on purchaseDetails.no_purchase=purchases.no_po "+
-    "where date_format(stockies.date_in,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"'"+
-    "group by item_code,stockies.no_facture",{type: db.sequelize.QueryTypes.SELECT }).then(
+    "inner join purchaseDetails on purchaseDetails.no_purchase=purchases.no_po and purchaseDetails.itemId=stockies.itemId "+
+    "where date_format(stockies.date_in,'%Y-%m-%d') between '"+req.body.date_start+"' and '"+req.body.date_end+"' "+
+    "group by stockies.itemId,stockies.no_po",{type: db.sequelize.QueryTypes.SELECT }).then(
         results =>{
             res.status(200).send({
                 results

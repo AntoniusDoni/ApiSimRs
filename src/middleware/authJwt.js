@@ -50,11 +50,11 @@ isAdmin = (req, res, next) => {
     });
   });
 };
-isUserOrAdmin= (req, res, next) => {
+isSuperOrAdmin= (req, res, next) => {
   users.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "user") {
+        if (roles[i].name === "superadmin") {
           next();
           return;
         }
@@ -73,6 +73,6 @@ const authJwt = {
   verifyToken: verifyToken,
   isSuperAdmin: isSuperAdmin,
   isAdmin: isAdmin,
-  isUserOrAdmin: isUserOrAdmin
+  isSuperOrAdmin: isSuperOrAdmin
 };
 module.exports = authJwt;

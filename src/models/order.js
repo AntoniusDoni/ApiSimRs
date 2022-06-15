@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "orderId",
         otherKey: "itemsId"
       });
+      Order.hasMany(models.OrderDetails,{
+        foreignKey: 'orderId',
+        otherKey:'no_order'
+      })
     }
   }
   Order.init({
@@ -23,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.UUID,
       primaryKey: true 
     } ,
-    order_date: DataTypes.DATE,
+    order_date: DataTypes.DATEONLY,
     customerName: DataTypes.STRING,
     customer_phone: DataTypes.STRING,
     status: DataTypes.TINYINT,

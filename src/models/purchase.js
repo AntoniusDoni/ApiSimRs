@@ -35,6 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     purchase_date: DataTypes.DATE,
     categoryId:DataTypes.INTEGER,
     grand_total: DataTypes.DOUBLE,
+    nama_apotek:DataTypes.STRING,
+    noSipa:DataTypes.STRING,
     is_done:DataTypes.TINYINT,
     createdAt: new Date(),
     updatedAt: new Date()
