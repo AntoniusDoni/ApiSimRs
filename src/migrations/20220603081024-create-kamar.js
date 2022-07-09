@@ -8,14 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      kode_kamar: {
-        type: Sequelize.STRING
-      },
-      kd_bangsal: {
+      kode_kamar:{
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      nm_kamar:{
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      idbangsal: {
+        type: Sequelize.INTEGER,
         references: {
           model: 'bangsals', 
-          key: 'kode_bangsal', 
+          key: 'id', 
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',

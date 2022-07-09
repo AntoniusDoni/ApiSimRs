@@ -2,7 +2,7 @@ const db =  require("../../models");
 const { sequelize } =  require("../../models");
 const { Op } = require("sequelize");
 const Kabupaten=db.kabupaten_kota;
-const Provinsi=db.provinsis;
+const Provinsi=db.provinsi;
 
 exports.addkabupaten = (req, res) => {
     Kabupaten.create({
@@ -24,8 +24,24 @@ exports.getlistkabupaten = (req,res)=>{
                 attributes: ['nm_pro']
             },
         ]
-    }
-        
+    }  
+    ).then(kabupaten=>{
+        res.status(200).send(kabupaten)
+    }).catch(err => {
+        res.status(500).send({ message: err.message });
+    })
+}
+exports.getlistkabupatenbyidpro = (req,res)=>{
+    Kabupaten.findAll({
+        where:{idprop:req.body.idprop },
+        include:[
+            {
+                model: Provinsi,
+                require: true,
+                attributes: ['nm_pro']
+            },
+        ]
+    }  
     ).then(kabupaten=>{
         res.status(200).send(kabupaten)
     }).catch(err => {
@@ -40,7 +56,7 @@ exports.editkabupaten=(req,res)=>{
         where:{
             id:req.body.id
         }
-    }).the(kebupaten=>{
+    }).then(kebupaten=>{
         res.status(200).send(kebupaten)
     }).catch(err => {
         res.status(500).send({ message: err.message });

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
 const { users } = require('../models');
+const io = require('socket.io')();
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -18,6 +19,7 @@ verifyToken = (req, res, next) => {
     req.userId = decoded.id;
     next();
   });
+  
 };
 isSuperAdmin = (req, res, next) => {
   users.findByPk(req.userId).then(user => {

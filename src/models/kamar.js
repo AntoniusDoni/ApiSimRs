@@ -12,17 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Kamar.belongsTo(models.bangsals,{
-        foreignKey: 'kd_bangsal',
+        foreignKey: 'idbangsal',
       });
     }
   }
   Kamar.init({
-    kode_kamar:{
-      type:DataTypes.STRING,
-      primaryKey: true,
-      
-      },
-    kd_bangsal: DataTypes.STRING,
+    kode_kamar:DataTypes.STRING,
+    nm_kamar:DataTypes.STRING,
+    idbangsal: DataTypes.INTEGER,
     harga: DataTypes.DOUBLE,
     kelas: DataTypes.TINYINT,
     stts_kamar: DataTypes.TINYINT,

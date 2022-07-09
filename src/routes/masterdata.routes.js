@@ -11,8 +11,12 @@ const Penjamin=require('../controllers/master/penjamin.controller')
 const Iks=require('../controllers/master/iks.controller')
 const Dokter=require('../controllers/master/dokter.controller')
 const UserMenu = require('../controllers/master/userMenu.controller')
+const Pasien= require('../controllers/master/pasien.controller')
+const Registrasi=require('../controllers/registrasi.controller')
+const Tindakan=require('../controllers/master/tindakan.controller')
 module.exports = function (app) {
     app.use(function (req, res, next) {
+        
         res.header(
             "Access-Control-Allow-Headers",
             "x-access-token, Origin, Content-Type, Accept"
@@ -59,6 +63,11 @@ module.exports = function (app) {
         Kabupaten.getlistkabupaten
     );
     app.post(
+        "/api/master/getlistkabupatenbyprop",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Kabupaten.getlistkabupatenbyidpro
+    );
+    app.post(
         "/api/master/editkabupaten",
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Kabupaten.editkabupaten
@@ -80,6 +89,11 @@ module.exports = function (app) {
         Kecamatan.getlistkecamatan
     );
     app.post(
+        "/api/master/getlistkecamatanbyidkab",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Kecamatan.getlistkecamatanbyidkab
+    );
+    app.post(
         "/api/master/editkecamatan",
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Kecamatan.editkecamatan
@@ -99,6 +113,11 @@ module.exports = function (app) {
         "/api/master/getlistkelurahan/",
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Kelurahan.getlistkelurahan
+    );
+    app.post(
+        "/api/master/getlistkelurahanbyidkec",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Kelurahan.getlistkelurahanbyidkec
     );
     app.post(
         "/api/master/editkelurahan",
@@ -162,6 +181,11 @@ module.exports = function (app) {
         "/api/master/getlistdokter/",
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Dokter.getlistdokter
+    );
+    app.post(
+        "/api/master/getlistdokterbypolijadwal",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Dokter.getlistdokterbypolijadwal
     );
     app.post(
         "/api/master/editdokter",
@@ -248,6 +272,11 @@ module.exports = function (app) {
         Iks.getlistiks
     );
     app.post(
+        "/api/master/getlistiksByIdPenjamin",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Iks.getlistiksByIdPenjamin
+    );
+    app.post(
         "/api/master/editiks",
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Iks.editiks
@@ -257,7 +286,82 @@ module.exports = function (app) {
         [authJwt.verifyToken, authJwt.isSuperOrAdmin],
         Iks.deleteiks
     );
+        // pasien
+        app.get(
+            "/api/master/getlistpasien/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.listpasien
+        );
+        app.post(
+            "/api/master/getfilterlistpasien/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.listpasien
+        );
+        app.get(
+            "/api/master/getlastrm/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.getlastrm
+        );
+        app.post(
+            "/api/master/addpasien",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.addpasien
+        );
+        app.post(
+            "/api/master/updatepasien",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.updatepasien
+        ); 
+        app.post(
+            "/api/master/deletpasien",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Pasien.deletpasien
+        ); 
+        // Registrasi
+        app.post("/api/master/addregpasien",
+        [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+        Registrasi.addRegistrasi) 
 
-
-
+        app.post(
+            "/api/master/getlastreg/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Registrasi.getLastReg
+        );
+        app.post(
+            "/api/master/getlistregistrasi/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Registrasi.getlistregistrasi
+        );  
+        app.post(
+            "/api/master/updateregpasien/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Registrasi.updateregpasien
+        );   
+        app.post(
+            "/api/master/deletereg/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Registrasi.deleteReg
+          )
+// Tindakan
+          app.post(
+            "/api/master/addTindakan",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Tindakan.addTindakan
+        );
+        app.get(
+            "/api/master/getlistTindakan/",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Tindakan.getlistTindakan
+        );
+        app.post(
+            "/api/master/editTindakan",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Tindakan.editTindakan
+        );
+        app.delete(
+            "/api/master/deleteTindakan/:id",
+            [authJwt.verifyToken, authJwt.isSuperOrAdmin],
+            Tindakan.deleteTindakan
+        );
+        
 }

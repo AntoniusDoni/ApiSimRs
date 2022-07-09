@@ -11,10 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      dokter.hasMany(models.jadwals,{
+        foreignKey: 'kd_dokter',
+      });
     }
   }
   dokter.init({
-    kode_dokter: DataTypes.STRING,
+    kode_dokter: {
+      type:DataTypes.STRING,
+      primaryKey: true 
+    },
     nm_dokter: DataTypes.STRING,
     jk: DataTypes.TINYINT,
     tgl_lahir: DataTypes.DATE,
@@ -26,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     no_tlp: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'dokter',
+    modelName: 'dokters',
   });
   return dokter;
 };

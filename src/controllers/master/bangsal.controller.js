@@ -22,13 +22,13 @@ exports.getlistbangsal = (req,res)=>{
 }
 exports.editbangsal=(req,res)=>{
     Bangsal.update({
-      
         nm_bangsal:req.body.nm_bangsal,
+        kode_bangsal:req.body.kode_bangsal
     },{
         where:{
-            kode_bangsal:req.body.kode_bangsal
+            id:req.body.id
         }
-    }).the(bangsal=>{
+    }).then(bangsal=>{
         res.status(200).send(bangsal)
     }).catch(err => {
         res.status(500).send({ message: err.message });

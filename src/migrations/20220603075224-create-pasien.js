@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       ttgl_lahir: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       jk: {
         type: Sequelize.TINYINT
@@ -60,6 +60,9 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      is_active:{
+        type: Sequelize.TINYINT
       }
     });
   },

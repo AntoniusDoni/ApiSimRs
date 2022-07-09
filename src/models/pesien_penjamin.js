@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     no_rm: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'pesien_penjamin',
+    modelName: 'pesien_penjamins',
   });
   return pesien_penjamin;
 };

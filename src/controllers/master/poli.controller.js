@@ -14,7 +14,9 @@ exports.addpoli = (req, res) => {
     })
 }
 exports.getlistpoli = (req,res)=>{
-    Poli.findAll().then(poli=>{
+    Poli.findAll({
+        attributes:['kode_poli','nama_poli']
+    }).then(poli=>{
         res.status(200).send(poli)
     }).catch(err => {
         res.status(500).send({ message: err.message });
@@ -28,7 +30,7 @@ exports.editpoli=(req,res)=>{
         where:{
             kode_poli:req.body.kode_poli
         }
-    }).the(poli=>{
+    }).then(poli=>{
         res.status(200).send(poli)
     }).catch(err => {
         res.status(500).send({ message: err.message });

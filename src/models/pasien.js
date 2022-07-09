@@ -11,14 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      
+      pasien.hasMany(models.pesien_penjamins,{
+        foreignKey: 'no_rm',
+        otherKey:'no_rm'
+      })
+      pasien.hasMany(models.penanggung_jawab_pasiens,{
+        foreignKey: 'no_rm',
+        otherKey:'no_rm'
+      })
+      pasien.belongsTo(models.kelurahan,{
+        foreignKey: 'id_kelurahan',
+      });
     }
   }
   pasien.init({
-    no_rm: DataTypes.INTEGER,
+    no_rm:{
+      type:DataTypes.INTEGER,
+      primaryKey: true 
+    },
     nm_pasien: DataTypes.STRING,
     nik: DataTypes.STRING,
     alamat: DataTypes.STRING,
-    ttgl_lahir: DataTypes.DATE,
+    ttgl_lahir: DataTypes.DATEONLY,
     jk: DataTypes.TINYINT,
     no_tlp: DataTypes.STRING,
     tempat_lahir: DataTypes.STRING,
@@ -27,10 +42,11 @@ module.exports = (sequelize, DataTypes) => {
     sst_perkawinan: DataTypes.TINYINT,
     gol_darah: DataTypes.STRING,
     pekerjaan: DataTypes.STRING,
-    nm_ibu: DataTypes.STRING
+    nm_ibu: DataTypes.STRING,
+    is_active:DataTypes.TINYINT
   }, {
     sequelize,
-    modelName: 'pasien',
+    modelName: 'pasiens',
   });
   return pasien;
 };

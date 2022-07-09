@@ -1,14 +1,20 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('registrasis', {
+    await queryInterface.createTable('registrases', {
       no_reg: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
       },
       no_rm: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'pasiens', 
+          key: 'no_rm', 
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       tgl_reg: {
         type: Sequelize.DATE
@@ -40,6 +46,9 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
+      no_kartu:{
+        type: Sequelize.STRING
+      },
       stts_daftar: {
         type: Sequelize.TINYINT
       },
@@ -66,6 +75,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('registrasis');
+    await queryInterface.dropTable('registrases');
   }
 };

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     kelas: DataTypes.TINYINT
   }, {
     sequelize,
-    modelName: 'tindakan',
+    modelName: 'tindakans',
   });
   return tindakan;
 };

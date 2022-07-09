@@ -22,16 +22,16 @@ exports.getlistjadwal = (req,res)=>{
         include:[
             {
             model: Dokter,
-            require: true,
+            required: true,
             attributes: ['nm_dokter']
             },
             {
                 model: Poli,
-                require: true,
+                required: true,
                
             }
         ]
-    }).then(bangsal=>{
+    }).then(jadwal=>{
         res.status(200).send(jadwal)
     }).catch(err => {
         res.status(500).send({ message: err.message });
@@ -46,9 +46,9 @@ exports.editjadwal=(req,res)=>{
         kd_poli:req.body.kd_poli
     },{
         where:{
-            id:req.body.idbangsal
+            id:req.body.id
         }
-    }).the(bangsal=>{
+    }).then(jadwal=>{
         res.status(200).send(jadwal)
     }).catch(err => {
         res.status(500).send({ message: err.message });

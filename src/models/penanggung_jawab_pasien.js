@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      penanggung_jawab_pasien.belongsTo(models.kelurahan,{
+        foreignKey: 'id_kelurahan',
+      });
+      penanggung_jawab_pasien.belongsTo(models.pasiens,{
+        foreignKey: 'no_rm',
+      });
     }
   }
   penanggung_jawab_pasien.init({
@@ -24,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     id_kelurahan: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'penanggung_jawab_pasien',
+    modelName: 'penanggung_jawab_pasiens',
   });
   return penanggung_jawab_pasien;
 };

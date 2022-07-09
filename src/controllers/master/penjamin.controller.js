@@ -24,9 +24,9 @@ exports.editpenjamin=(req,res)=>{
         nama_penjab:req.body.nama_penjab,
     },{
         where:{
-            id:req.body.idpenjamin
+            id:req.body.id
         }
-    }).the(penjamin=>{
+    }).then(penjamin=>{
         res.status(200).send(penjamin)
     }).catch(err => {
         res.status(500).send({ message: err.message });

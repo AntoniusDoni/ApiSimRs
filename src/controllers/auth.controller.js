@@ -50,49 +50,6 @@ exports.getSetting=(req,res)=>{
         });
 }
 
-exports.login = (req, res) => {
-  const result=db.sequelize.query("select users.*,menus.id as menuId,menus.menuName,menus.link,menus.parent,child.id as childId,child.menuName,child.link,child.parent "+
-  "from users  "+
-  "inner join user_menus on user_menus.idUser=users.id  "+
-  "inner join menus on menus.id=user_menus.menuId  "+
-  "inner join menus as child on child.parent=menus.id  "+
-  "where users.username='"+req.body.username+"' group by menus.id;",{type: db.sequelize.QueryTypes.SELECT }).then(
-      user =>{
-        console.log(user[0].id)
-        if (!user) {
-          return res.status(404).send({ message: "User Not found." });
-        }
-        var passwordIsValid = bcrypt.compareSync(
-          req.body.password,
-          user.password
-        );
-        if (!passwordIsValid) {
-          return res.status(401).send({
-            accessToken: null,
-            message: "Invalid Password!"
-          });
-        }
-        var token = jwt.sign({ id: user.id }, process.env.SECRET_JWT, {
-          expiresIn: 86400 // 24 hours
-        });
-    
-       
-          res.status(200).send({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            // roles: authorities,
-            accessToken: token,
-            // menus:user.menus
-          });           
-     
-
-      })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
-  });
-}
-
 exports.signin = (req, res) => {
   User.findOne({
     where: {
@@ -154,7 +111,6 @@ exports.signin = (req, res) => {
           return r;
       }(nodes, 0);
       // console.log(tree);
-
           res.status(200).send({
             id: user.id,
             username: user.username,

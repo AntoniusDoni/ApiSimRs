@@ -6,10 +6,10 @@ const Kecamatan=db.kecamatan;
 
 exports.addkelurahan = (req, res) => {
     Kelurahan.create({
-        nm_kec:req.body.nm_kec,
+        nm_kel:req.body.nm_kel,
         idkec:req.body.idkec
     }).then(kelurahan=>{
-        res.status(200).send({kelurahan:kelurahan,nessage:"success"})
+        res.status(200).send({kelurahan:kelurahan,message:"success"})
     }).catch(err => {
         res.status(500).send({ message: err.message });
     })
@@ -31,15 +31,27 @@ exports.getlistkelurahan = (req,res)=>{
         res.status(500).send({ message: err.message });
     })
 }
+exports.getlistkelurahanbyidkec = (req,res)=>{
+    Kelurahan.findAll({
+        where:{idkec:req.body.idkec}
+        ,attributes:['id','nm_kel']
+    }
+        
+    ).then(kelurahan=>{
+        res.status(200).send(kelurahan)
+    }).catch(err => {
+        res.status(500).send({ message: err.message });
+    })
+}
 exports.editkelurahan=(req,res)=>{
     Kelurahan.update({
-        nm_kec:req.body.nm_kec,
+        nm_kel:req.body.nm_kel,
         idkec:req.body.idkec
     },{
         where:{
             id:req.body.id
         }
-    }).the(kelurahan=>{
+    }).then(kelurahan=>{
         res.status(200).send(kelurahan)
     }).catch(err => {
         res.status(500).send({ message: err.message });

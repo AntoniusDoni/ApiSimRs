@@ -7,31 +7,34 @@ exports.addprovinsi = (req, res) => {
     Provinsi.create({
         nm_pro:req.body.nm_pro
     }).then(provinsi=>{
-        res.status(200).send({provinsi:provinsi,nessage:"success"})
+        res.status(200).send({provinsi})
     }).catch(err => {
         res.status(500).send({ message: err.message });
     })
 }
 exports.getlistprovinsi = (req,res)=>{
-    Provinsi.findAll().then(provinsi=>{
+    Provinsi.findAll({order:[['id','DESC']]}).then(provinsi=>{
         res.status(200).send(provinsi)
     }).catch(err => {
         res.status(500).send({ message: err.message });
     })
 }
-exports.editprovinsi=(req,res)=>{
+exports.editprovinsi=(async(req,res)=>{
     Provinsi.update({
         nm_pro:req.body.nm_pro
     },{
         where:{
-            id:req.body.idprovinsi
+            id:req.body.id
         }
-    }).the(provinsi=>{
-        res.status(200).send(provinsi)
+    }).then(provinsi=>{
+        Provinsi.findOne({where:{id:req.body.id}}).then(provinsi=>{
+            res.status(200).send(provinsi)
+        })
+        
     }).catch(err => {
         res.status(500).send({ message: err.message });
     })
-}
+})
 exports.deleteprovinsi = (req, res) => {
     const { id } = req.params;
     Provinsi.destroy({ where: { id: id } })

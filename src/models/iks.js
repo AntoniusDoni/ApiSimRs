@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      IKS.belongsTo(models.penjamin,{
+      IKS.belongsTo(models.penjamins,{
         foreignKey: 'idpenjamin',
       });
     }
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     idpenjamin: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'IKS',
+    modelName: 'iks',
   });
   return IKS;
 };

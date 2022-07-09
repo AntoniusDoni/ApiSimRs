@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     nama_penjab: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'penjamin',
+    modelName: 'penjamins',
   });
   return penjamin;
 };

@@ -1,16 +1,30 @@
 const db =  require("../../models");
 const { sequelize } =  require("../../models");
 const { Op } = require("sequelize");
-const IKS=db.IKs;
+const IKS=db.iks;
 const Penjamin=db.penjamins;
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 exports.addiks = (req, res) => {
     IKS.create({
         nama_perusahaan:req.body.nama_perusahaan,
         alamat:req.body.alamat,
         no_tlp:req.body.no_tlp,
         no_kontrak:req.body.no_kontrak,
-        tgl_mulai:req.body.no_kontrak,
-        tgl_selesai:req.body.no_kontrak,
+        tgl_mulai:formatDate(req.body.tgl_mulai),
+        tgl_selesai:formatDate(req.body.tgl_selesai),
         idpenjamin:req.body.idpenjamin
     }).then(iks=>{
         res.status(200).send({iks:iks,message:"success"})
@@ -24,12 +38,22 @@ exports.getlistiks = (req,res)=>{
             {
             model: Penjamin,
             require: true,
-            attributes: ['nm_penjamin']
+            attributes: ['nama_penjab']
             }
-        ]
-        
+        ]       
     }
-    ).then(penjamin=>{
+    ).then(iks=>{
+        res.status(200).send(iks)
+    }).catch(err => {
+        res.status(500).send({ message: err.message });
+    })
+}
+exports.getlistiksByIdPenjamin = (req,res)=>{
+    IKS.findAll({
+        where:{idpenjamin:req.body.idpenjamin},
+        attributes:['id','nama_perusahaan']       
+    }
+    ).then(iks=>{
         res.status(200).send(iks)
     }).catch(err => {
         res.status(500).send({ message: err.message });
@@ -41,14 +65,14 @@ exports.editiks=(req,res)=>{
         alamat:req.body.alamat,
         no_tlp:req.body.no_tlp,
         no_kontrak:req.body.no_kontrak,
-        tgl_mulai:req.body.no_kontrak,
-        tgl_selesai:req.body.no_kontrak,
+        tgl_mulai:formatDate(req.body.tgl_mulai),
+        tgl_selesai:formatDate(req.body.tgl_selesai),
         idpenjamin:req.body.idpenjamin
     },{
         where:{
             id:req.body.idpenjamin
         }
-    }).the(penjamin=>{
+    }).then(iks=>{
         res.status(200).send(iks)
     }).catch(err => {
         res.status(500).send({ message: err.message });

@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Jadwal.belongsTo(models.dokter,{
+      Jadwal.belongsTo(models.dokters,{
         foreignKey: 'kd_dokter',
       });
-      Jadwal.belongsTo(models.poli,{
+      Jadwal.belongsTo(models.polis,{
         foreignKey: 'kd_poli',
       });
     }

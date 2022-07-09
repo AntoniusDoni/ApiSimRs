@@ -17,8 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     
     kode_bangsal:{
       type:DataTypes.STRING,
-      primaryKey: true,
-      
+     
       },
     nm_bangsal: DataTypes.STRING
   }, {

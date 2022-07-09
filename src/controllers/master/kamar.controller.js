@@ -1,12 +1,13 @@
 const db =  require("../../models");
 const { sequelize } =  require("../../models");
 const { Op } = require("sequelize");
-const Kamar=db.kamar;
-const Bangsal=db.bangsal;
+const Kamar=db.kamars;
+const Bangsal=db.bangsals;
 exports.addkamar = (req, res) => {
     Kamar.create({
         kode_kamar:req.body.kode_kamar,
-        kd_bangsal:req.body.kdbangsal,
+        nm_kamar:req.body.nm_kamar,
+        idbangsal:req.body.idbangsal,
         harga:req.body.harga,
         kelas:req.body.kelas,
         stts_kamar:req.body.stts_kamar,
@@ -25,10 +26,9 @@ exports.getlistkamar = (req,res)=>{
             require: true,
             attributes: ['nm_bangsal']
             }
-        ]
-        
+        ] 
     }
-    ).then(bangsal=>{
+    ).then(kamar=>{
         res.status(200).send(kamar)
     }).catch(err => {
         res.status(500).send({ message: err.message });
@@ -37,16 +37,17 @@ exports.getlistkamar = (req,res)=>{
 exports.editkamar=(req,res)=>{
     Kamar.update({
         kode_kamar:req.body.kode_kamar,
-        kd_bangsal:req.body.kd_bangsal,
+        nm_kamar:req.body.nm_kamar,
+        idbangsal:req.body.idbangsal,
         harga:req.body.harga,
         kelas:req.body.kelas,
         stts_kamar:req.body.stts_kamar,
         isactive:req.body.isactive
     },{
         where:{
-            id:req.body.idbangsal
+            id:req.body.id
         }
-    }).the(bangsal=>{
+    }).then(kamar=>{
         res.status(200).send(kamar)
     }).catch(err => {
         res.status(500).send({ message: err.message });
