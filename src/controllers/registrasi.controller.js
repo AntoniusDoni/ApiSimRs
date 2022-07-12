@@ -11,7 +11,18 @@ const Kabupaten=db.kabupaten_kota;
 const Provinsi=db.provinsi;
 const Poli=db.polis;
 const Dokter=db.dokters;
+
 exports.addRegistrasi = (async(req, res) => {
+    if(req.body.idpj!=0){
+        await Penjawb.update({
+            nm_penanggung: req.body.nm_penanggung,
+            alamat: req.body.alamatPj,
+            hub_pasien: req.body.hub_pasien,
+            no_tlp: req.body.no_tlpPj,
+        },{
+            where:{id:req.body.idpj}
+        })
+    }
    await Registrasi.create({
         no_reg: req.body.no_reg,
         no_rm: req.body.no_rm,
@@ -188,16 +199,27 @@ exports.getLastReg=(req,res)=>{
 }
 exports.getlistregistrasi=(req,res)=>{
    
-    var condition={tgl_reg:req.body.tgl_reg,stts_rawat:req.body.stts_rawat}
-    if(req.body.kode_poli!==""){
-        condition={tgl_reg:req.body.tgl_reg,kode_poli:req.body.kode_poli,stts_rawat:req.body.stts_rawat}
+    var condition={tgl_reg:req.body.tgl_reg}
+    if(req.body.kode_poli!==""&&req.body.stts_daftar!==""){
+        condition=
+        {tgl_reg:req.body.tgl_reg,
+            kode_poli:req.body.kode_poli,
+            stts_daftar:req.body.stts_daftar
+        }
+    }else if(req.body.kode_poli!==""){
+        condition=
+        {
+            tgl_reg:req.body.tgl_reg,          
+            kode_poli:req.body.kode_poli,
+        }
+    }else if(req.body.stts_daftar!==""){
+        condition=
+        {tgl_reg:req.body.tgl_reg,        
+            stts_daftar:req.body.stts_daftar
+        }
     }
-    let pasienCondition
-    if(req.body.no_rm!==""){
-        pasienCondition={where:{no_rm:{
-            [Op.like]:`%${req.body.no_rm}%`
-        }}}
-    }
+    
+    
     Registrasi.findAll({
         where:condition,
         include:[
@@ -209,7 +231,11 @@ exports.getlistregistrasi=(req,res)=>{
             {
                 model:Dokter,
                 required: true,
-                attributes:['nm_dokter']
+                attributes:['nm_dokter'],
+                where:{nm_dokter:{
+                    [Op.like]:`%${req.body.searchdokter}%`
+                    },                 
+                },
             },
             {
                 model: Pasien,
@@ -261,7 +287,7 @@ exports.getlistregistrasi=(req,res)=>{
            
         ],
         attributes:['no_reg','no_rm','tgl_reg','kode_dokter','kode_poli','idiks','no_kartu','stts_daftar','stts_bayar','stts_rawat','stts_periksa','umurdaftar'],
-        limit:1000,
+        limit:10000,
         order: [["no_reg","DESC"]]
     }).then(register=>{
         req.app.get('io').local.emit("registrasi",register);
