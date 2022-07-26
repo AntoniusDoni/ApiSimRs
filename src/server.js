@@ -20,6 +20,7 @@ const io = socketIo(server,{
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('./uploads'));
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Sistem Informasi RS application." });

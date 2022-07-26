@@ -8,6 +8,8 @@ const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { sequelize } = require('../models');
+var multer  =   require('multer');
+const path = require("path")
 exports.signup = (req, res) => {
   // Save User to Database
   User.create({
@@ -126,9 +128,47 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      // Uploads is the Upload_folder_name
+      cb(null, "../backend/uploads")
+  },
+ 
+  filename: function (req, file, cb) {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, file.fieldname + "-" + Date.now()+"."+ext)
+  }
+})
+     
+// Define the maximum size for uploading
+// picture i.e. 1 MB. it is optional
+const maxSize = 1 * 1000 * 1000;
+  
+var upload = multer({ 
+  storage: storage,
+  limits: { fileSize: maxSize },
+  fileFilter: function (req, file, cb){
+  
+      // Set the filetypes, it is optional
+      var filetypes = /jpeg|jpg|png/;
+      var mimetype = filetypes.test(file.mimetype);
 
+      var extname = filetypes.test(path.extname(
+                  file.originalname).toLowerCase());
+      
+      if (mimetype && extname) {
+          return cb(null, true);
+      }
+    
+      cb("Error: File upload only supports the "
+              + "following filetypes - " + filetypes);
+    } 
+
+// mypic is the name of file attribute
+}).single("logo");  
 
 exports.updateSetting = (req, res) => {
+
   // console.log(req.body.title);
   Settings.update({
     attr:req.body.title
@@ -141,30 +181,38 @@ exports.updateSetting = (req, res) => {
     attr:req.body.margin
   },{
     where :{
-      id:2
+      id:4
     }
   })
   Settings.update({
     attr:req.body.address
   },{
     where :{
-      id:3
+      id:2
     }
   })
-  Settings.update({
-    attr:req.body.apotker
-  },{
-    where :{
-      id:4
-    }
-  })
-  Settings.update({
-    attr:req.body.sipa
-  },{
-    where :{
-      id:5
-    }
-  })
+  // 
+  console.log(req.body)
+  if(req.file){
+  upload(req,res,function(err) {
+    // console.log(req.file.filename)
+        if(err) {
+            // res.send(err)
+            // console.log(err)
+        }
+        else {
+          Settings.update({
+              attr:"uploads/"+req.file.filename
+            },{
+              where :{
+                id:3
+              }
+            })
+            // res.send("Success, Image uploaded!")
+        }
+    })
+  }
+  
   
   res.status(200).send("Seting Telah di perbaharui.");
 }
